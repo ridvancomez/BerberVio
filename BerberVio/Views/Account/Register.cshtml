@@ -1,0 +1,64 @@
+@model BerberVio.Models.RegisterViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="~/design-source/signin/fonts/linearicons/style.css">
+    <link rel="stylesheet" href="~/design-source/signin/css/style.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="inner">
+            <img src="~/design-source/signin/images/image-1.png" alt="" class="image-1">
+            <form asp-controller="Account" asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <h3>New Account?</h3>
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-holder">
+                    <span class="lnr lnr-user"></span>
+                    <input asp-for="Name" class="form-control" placeholder="Name">
+                </div>
+                <div class="form-holder">
+                    <span class="lnr lnr-user"></span>
+                    <input asp-for="Surname" class="form-control" placeholder="Surname">
+                </div>
+                <div class="form-holder">
+                    <span class="lnr lnr-phone-handset"></span>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number">
+                </div>
+                <div class="form-holder">
+                    <span class="lnr lnr-envelope"></span>
+                    <input asp-for="Email" class="form-control" placeholder="Mail">
+                </div>
+                <div class="form-holder">
+                    <span class="lnr lnr-lock"></span>
+                    <input asp-for="Password" class="form-control" placeholder="Password">
+                </div>
+                <div class="form-holder">
+                    <span class="lnr lnr-lock"></span>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
+                </div>
+                <button type="submit">
+                    <span>Register</span>
+                </button>
+            </form>
+            <img src="~/design-source/signin/images/image-2.png" alt="" class="image-2">
+        </div>
+
+    </div>
+
+    <script src="~/design-source/signin/js/jquery-3.3.1.min.js"></script>
+    <script src="~/design-source/signin/js/main.js"></script>
+</body>
+</html>
