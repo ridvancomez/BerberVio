@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="BerberVio.Business\BerberVio.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BerberVio.DataAccessLayer\**" />
+    <Content Remove="BerberVio.DataAccessLayer\**" />
+    <EmbeddedResource Remove="BerberVio.DataAccessLayer\**" />
+    <None Remove="BerberVio.DataAccessLayer\**" />
+    <Compile Remove="BerberVio.Business\**" />
+    <Content Remove="BerberVio.Business\**" />
+    <EmbeddedResource Remove="BerberVio.Business\**" />
+    <None Remove="BerberVio.Business\**" />
+    <Compile Remove="BerberVio.Entities\**" />
+    <Content Remove="BerberVio.Entities\**" />
+    <EmbeddedResource Remove="BerberVio.Entities\**" />
+    <None Remove="BerberVio.Entities\**" />
+    <Compile Remove="BerberVio.API\**" />
+    <Content Remove="BerberVio.API\**" />
+    <EmbeddedResource Remove="BerberVio.API\**" />
+    <None Remove="BerberVio.API\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.36" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
