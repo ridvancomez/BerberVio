@@ -22,8 +22,10 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/Login";
+    options.LoginPath = "/Cms/Account/Login";
+    options.AccessDeniedPath = "/Cms/Account/Login";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = false;
 });
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();

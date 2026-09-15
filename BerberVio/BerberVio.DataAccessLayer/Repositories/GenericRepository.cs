@@ -3,6 +3,7 @@ using System.Linq;
 using BerberVio.DataAccessLayer.Context;
 using BerberVio.Entities;
 using BerberVio.DataAccessLayer.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BerberVio.DataAccessLayer.Repositories
 {
@@ -33,6 +34,16 @@ namespace BerberVio.DataAccessLayer.Repositories
 
         public void Update(T entity)
         {
+            var idValue = _context.Entry(entity).Property("Id").CurrentValue;
+            var tracked = _context.Set<T>().Local
+                .FirstOrDefault(e => !ReferenceEquals(e, entity)
+                    && Equals(_context.Entry(e).Property("Id").CurrentValue, idValue));
+
+            if (tracked != null)
+            {
+                _context.Entry(tracked).State = EntityState.Detached;
+            }
+
             _context.Set<T>().Update(entity);
             _context.SaveChanges();
         }

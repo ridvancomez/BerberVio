@@ -8,9 +8,9 @@ namespace BerberVio.Entities
         public DateTime AppointmentDate { get; set; }
 
         public int EmployeeId { get; set; }
-        public Employee Employee { get; set; } = null!;
+        public Employee? Employee { get; set; }
 
         public int ServiceId { get; set; }
-        public Service Service { get; set; } = null!;
+        public Service? Service { get; set; }
     }
 }

@@ -1,0 +1,103 @@
+@model IEnumerable<BerberVio.Models.AppointmentViewModel>
+@{
+    ViewData["Title"] = "Randevular";
+}
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title">Randevular</h3>
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg"></i> Yeni Ekle
+        </a>
+    </div>
+    <div class="card-body">
+        <div id="appointment-table"></div>
+    </div>
+</div>
+
+<!--begin::Delete Confirm Modal-->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Silme Onayı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong id="deleteAppointmentLabel"></strong> randevusunu silmek istediğinize emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end::Delete Confirm Modal-->
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/css/tabulator_bootstrap5.min.css" />
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/js/tabulator.min.js"></script>
+    <script>
+      const appointmentData = @Html.Raw(Json.Serialize(Model));
+
+      function escapeHtml(str) {
+        return String(str ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function dateTimeFormatter(cell) {
+        const value = cell.getValue();
+        if (!value) return '';
+        const date = new Date(value);
+        const datePart = date.toLocaleDateString('tr-TR');
+        const timePart = date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        return `${datePart} ${timePart}`;
+      }
+
+      function actionsFormatter(cell) {
+        const row = cell.getRow().getData();
+        return `
+          <a href="/Cms/Appointment/Edit/${row.id}" class="btn btn-sm btn-primary me-1">
+            <i class="bi bi-pencil-square"></i> Düzenle
+          </a>
+          <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="${row.id}" data-label="${escapeHtml(row.employeeName)} - ${escapeHtml(row.serviceName)}">
+            <i class="bi bi-trash"></i> Sil
+          </button>
+        `;
+      }
+
+      new Tabulator('#appointment-table', {
+        data: appointmentData,
+        layout: 'fitColumns',
+        placeholder: 'Kayıt bulunamadı',
+        columns: [
+          { title: 'Id', field: 'id', width: 80 },
+          { title: 'Tarih/Saat', field: 'appointmentDate', formatter: dateTimeFormatter },
+          { title: 'Çalışan', field: 'employeeName' },
+          { title: 'Hizmet', field: 'serviceName' },
+          { title: 'İşlemler', field: 'id', formatter: actionsFormatter, headerSort: false, hozAlign: 'right' },
+        ],
+      });
+
+      document.getElementById('appointment-table').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-delete');
+        if (!btn) return;
+
+        document.getElementById('deleteForm').action = '/Cms/Appointment/Delete/' + btn.dataset.id;
+        document.getElementById('deleteAppointmentLabel').textContent = btn.dataset.label;
+
+        new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+      });
+    </script>
+}
