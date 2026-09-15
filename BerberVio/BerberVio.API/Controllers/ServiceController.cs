@@ -18,12 +18,14 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetAll()
     {
         return Ok(_serviceService.GetAll());
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public IActionResult GetById(int id)
     {
         var service = _serviceService.GetById(id);
