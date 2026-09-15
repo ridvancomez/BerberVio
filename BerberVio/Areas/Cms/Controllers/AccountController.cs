@@ -1,33 +1,42 @@
 using BerberVio.Entities;
 using BerberVio.Models;
 using BerberVio.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 
-namespace BerberVio.Controllers;
+namespace BerberVio.Areas.Cms.Controllers;
 
+[Area("Cms")]
 public class AccountController : Controller
 {
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
     private readonly ApiClient _apiClient;
+    private readonly IConfiguration _configuration;
 
-    public AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ApiClient apiClient)
+    public AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ApiClient apiClient, IConfiguration configuration)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _apiClient = apiClient;
+        _configuration = configuration;
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login(string? returnUrl = null)
     {
+        if (User.Identity.IsAuthenticated)
+            return RedirectToAction("Index", "Dashboard", new { area = "Cms" });
+
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
@@ -50,12 +59,14 @@ public class AccountController : Controller
 
                 if (authResult != null)
                 {
+                    var expireMinutes = int.Parse(_configuration["ApiSettings:ExpireMinutes"] ?? "60");
+
                     Response.Cookies.Append("jwt", authResult.Token, new CookieOptions
                     {
                         HttpOnly = true,
                         Secure = false,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.UtcNow.AddMinutes(60)
+                        Expires = DateTimeOffset.UtcNow.AddMinutes(expireMinutes)
                     });
                 }
             }
@@ -73,12 +84,14 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Register()
     {
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -113,6 +126,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
