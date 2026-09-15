@@ -18,12 +18,14 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetAll()
     {
         return Ok(_appointmentService.GetAll());
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public IActionResult GetById(int id)
     {
         var appointment = _appointmentService.GetById(id);
@@ -31,6 +33,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult Add(Appointment appointment)
     {
         _appointmentService.Add(appointment);

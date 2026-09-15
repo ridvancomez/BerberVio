@@ -18,12 +18,14 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetAll()
     {
         return Ok(_employeeService.GetAll());
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public IActionResult GetById(int id)
     {
         var employee = _employeeService.GetById(id);
