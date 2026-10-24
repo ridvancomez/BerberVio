@@ -14,3 +14,5 @@ obj/
 ## OS
 .DS_Store
 Thumbs.db
+wwwroot/design-source/
+wwwroot/lib/
